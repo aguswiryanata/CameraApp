@@ -13,6 +13,7 @@ import android.provider.MediaStore.ACTION_IMAGE_CAPTURE
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import id.co.plnntb.re100.helper.GPSTracker
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     val REQUEST_PERMMISION_CODE = 100
     val REQUEST_CAMERA_CODE = 101
     var currentPhoto: String? = null
+    var gps : GPSTracker?= null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,17 @@ class MainActivity : AppCompatActivity() {
         ) {
             daftarIzin.add(Manifest.permission.CAMERA)
         }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            daftarIzin.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            daftarIzin.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+
         if (daftarIzin.size > 0) {
             val iz = arrayOfNulls<String>(daftarIzin.size)
             for (i in 0 until daftarIzin.size) {
@@ -50,7 +64,8 @@ class MainActivity : AppCompatActivity() {
             }
             ActivityCompat.requestPermissions(this, iz, REQUEST_PERMMISION_CODE)
         } else {
-            //do nothing
+             gps = GPSTracker(this)
+
         }
         //tambahkan fungsi click pada ImageView (dg id photo)
         //jadi, ketika di klik, akan memanggil fungsi TakePicture
@@ -62,6 +77,12 @@ class MainActivity : AppCompatActivity() {
         }
         foto2.setOnClickListener {
             takePicture("foto2.jpg", 102)
+        }
+        foto3.setOnClickListener {
+            takePicture("foto3.jpg", 103)
+            }
+        getKoordinat.setOnClickListener {
+            koordinat.text="${gps?.getLatitude()},${gps?.longitude}"
         }
     }
 
@@ -102,10 +123,21 @@ class MainActivity : AppCompatActivity() {
                 102 -> {
                     foto2.setImageURI(Uri.parse(currentPhoto))
                 }
+                103 -> {
+                    foto3.setImageURI(Uri.parse(currentPhoto))
+                }
             }
         }
 
 
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        gps = GPSTracker(this)
+    }
 }
