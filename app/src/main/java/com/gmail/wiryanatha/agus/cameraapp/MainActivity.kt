@@ -58,8 +58,12 @@ class MainActivity : AppCompatActivity() {
     }
     fun takePicture (namafile: String){
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        //Persiapan untuk buka aplikasi kamera bawaan android
         val filePhoto = File(getExternalFilesDir(null),namafile)
+        //Siapkan file yang akan menyimpan hasil photo
+
         val uriPhoto = FileProvider.getUriForFile(this,"com.gmail.wiryanatha.agus.cameraapp.fileprovider",filePhoto)
+
         //Ambil lokasi file foto tersebut, untuk ditampilakan nanti di ImageView
         currentPhoto = filePhoto.absolutePath
         //Info ke aplikasi kamera, lokasi tempat penyimpanan hasil photonya

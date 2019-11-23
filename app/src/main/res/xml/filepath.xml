@@ -2,6 +2,6 @@
 <paths>
     <external-path
         name="foto"
-        path="Android/data/com.gmail.wiryanatha.agus.cameraapp/foto"/>
+        path="Android/data/com.gmail.wiryanatha.agus.cameraapp/files"/>
 
 </paths>
